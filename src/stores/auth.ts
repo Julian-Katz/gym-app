@@ -63,6 +63,32 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("user");
       this.returnUrl = router.currentRoute.value.fullPath;
       router.push("/login");
-    }
+    },
+    async register(email: String, password: String, passwordConfirmation: String) {
+      try {
+        this.validationError = null;
+        await axios.get("/sanctum/csrf-cookie");
+        const response = await axios.post("/register", {
+          email: email,
+          password: password,
+          password_confirmation: passwordConfirmation,
+        });
+        if (response.status === 204) {
+          await this.getUser();
+          router.push("/");
+          this.returnUrl = null;
+        }
+      } catch (error: any) {
+        if (isAxiosError(error)) {
+          if (error.response && error.response.status === 422) {
+            this.validationError = error.response.data;
+          } else {
+            console.error(error);
+          }
+        } else {
+          console.error(error);
+        }
+      }
+    },
   },
 });
