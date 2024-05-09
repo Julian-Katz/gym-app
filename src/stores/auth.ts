@@ -58,5 +58,11 @@ export const useAuthStore = defineStore("auth", {
         console.error(error);
       }
     },
+    async sessionExpired() {
+      this.user = null;
+      localStorage.removeItem("user");
+      this.returnUrl = router.currentRoute.value.fullPath;
+      router.push("/login");
+    }
   },
 });
