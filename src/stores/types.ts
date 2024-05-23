@@ -6,7 +6,15 @@ export interface ValidationError {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
 }
+export interface Exercise {
+  id?: number;
+  user_id?: string;
+  name: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
